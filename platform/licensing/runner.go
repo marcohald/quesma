@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"os"
-	"slices"
 )
 
 type LicenseModule struct {
