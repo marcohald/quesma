@@ -56,7 +56,6 @@ jobs:
       # a lot of time on GitHub Actions.
       - name: Build and export
         uses: docker/build-push-action@v6
-        if: ${{ !inputs.PUSH }}
         with:
           context: .
           tags: |
@@ -69,27 +68,9 @@ jobs:
         env:
           DOCKER_BUILD_SUMMARY: false
 
-      # If we push the image, we build it for both amd64 and arm64 and don't export it
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        if: ${{ inputs.PUSH }}
-        with:
-          context: .
-          tags: |
-            quesma/quesma:${{ inputs.VERSION }}
-            quesma/quesma:nightly
-          push: true
-          build-args: |
-            QUESMA_BUILD_SHA=${{ github.sha }}
-            QUESMA_VERSION=${{ inputs.VERSION }}
-            QUESMA_BUILD_DATE=${{ env.QUESMA_BUILD_DATE }}
-          platforms: linux/amd64,linux/arm64
-        env:
-          DOCKER_BUILD_SUMMARY: false
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
-        if: ${{ !inputs.PUSH }}
         with:
           name: "quesma-nightly" # this is just a name for artifact stored in github, not in dockerhub
           path: /tmp/image.tar
